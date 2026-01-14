@@ -6,6 +6,18 @@
 *.ko
 *.obj
 *.elf
+Projecttracker
+
+# Build dirs
+build/
+bin/
+
+#VsCode
+.vscode/
+
+#Backups
+*~
+*.bak
 
 # Linker output
 *.ilk
