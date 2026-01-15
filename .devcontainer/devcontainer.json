@@ -1,0 +1,13 @@
+{
+    "name": "AmigaOS 4 Project Tracker",
+    "image": "walkero/amigagccondocker:os4-gcc11-3.0.0",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools"
+            ]
+        }
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/work,type=bind",
+    "workspaceFolder": "/work"
+}
