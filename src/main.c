@@ -1,4 +1,5 @@
 #include "../include/common.h"
+#include "../include/db/database.h"
 #include "../include/gui/main_window.h"
 
 int main(void)
@@ -8,7 +9,14 @@ int main(void)
     
     printf("%s v%s starting...\n", APP_NAME, APP_VERSION);
     
-    // Skapa huvudfönster
+    if (!db_init("PROGDIR:timetracker.db"))
+    {
+        printf("Failed to initialize database\n");
+        return 1;
+    }
+    
+   
+    // main window
     window = create_main_window();
     if (!window) {
         printf("Failed to create main window\n");
@@ -25,7 +33,7 @@ int main(void)
     
     // Städa upp
     close_main_window();
-    
+    db_close();
     printf("Application closed\n");
     return 0;
 }
