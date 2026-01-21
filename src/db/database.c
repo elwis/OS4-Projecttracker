@@ -112,4 +112,9 @@ BOOL db_test_connection(void)
         printf("Database connection test successful\n");
         return TRUE;
     }
+
+sqlite3 *get_db(void)
+{
+    return db;
+}
    

@@ -2,6 +2,8 @@
 #define DATABASE_H
 
 #include <exec/types.h>
+#include <sqlite3.h>
+sqlite3 *get_db(void);
 
 BOOL db_init(const char *db_path);
 void db_close(void);

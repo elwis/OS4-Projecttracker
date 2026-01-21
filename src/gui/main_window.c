@@ -1,5 +1,6 @@
 #include "../../include/common.h"
 #include "../../include/gui/main_window.h"
+#include "../../include/gui/project_dialog.h"
 #include <proto/window.h>
 #include <proto/layout.h>
 #include <proto/button.h>
@@ -164,7 +165,10 @@ BOOL handle_main_window_events(void)
                 switch (result & WMHI_GADGETMASK) {
                     case GAD_NEW:
                         printf("New project clicked\n");
-                        // TODO: Öppna new project dialog
+                        if(show_new_project_dialog())   
+                        {
+                            refresh_project_list();
+                        }
                         break;
                         
                     case GAD_OPEN:
