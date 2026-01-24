@@ -1,6 +1,7 @@
 #include "../../include/common.h"
 #include "../../include/gui/main_window.h"
 #include "../../include/gui/project_dialog.h"
+#include "../../include/model/project.h"
 #include <proto/window.h>
 #include <proto/layout.h>
 #include <proto/button.h>
@@ -12,6 +13,7 @@
 #include <gadgets/listbrowser.h>
 #include <gadgets/space.h>
 #include <intuition/classusr.h>
+
 
 // Privata variabler
 static struct Window *main_window = NULL;
@@ -129,6 +131,8 @@ struct Window *create_main_window(void)
         return NULL;
     }
     
+    printf("Main Window created successfully\n");
+    refresh_project_list();
     return main_window;
 }
 
@@ -199,6 +203,51 @@ BOOL handle_main_window_events(void)
 
 void refresh_project_list(void)
 {
-    // TODO: Ladda projekt från databas och uppdatera listbrowser
+    Project **projects;
+    int count;
+    int i;
+    struct Node *node;
+    char hours_str[32];
+
     printf("Refreshing project list...\n");
+
+    if(!listbrowser || !project_list){
+        printf("Listbrowser or project_list not initialized\n");
+        return;
+    }
+
+    IIntuition->SetAttrs(listbrowser, LISTBROWSER_Labels, NULL, TAG_DONE);  
+    while((node = IExec->RemHead(project_list))){
+        IListBrowser->FreeListBrowserNode(node);    
+    }
+    projects = project_get_all(&count);
+
+    if(!projects){
+        printf("No projects found\n");
+        IIntuition->RefreshSetGadgetAttrs((struct Gadget *)listbrowser, main_window, NULL, LISTBROWSER_Labels, project_list, TAG_DONE);
+        return;
+    }
+    printf("Found %d projects\n", count);
+
+    for(i = 0; i < count; i++){
+        sprintf(hours_str, "%.1f", projects[i]->estimated_hours);
+        
+        node = IListBrowser->AllocListBrowserNode(4, 
+            LBNA_Column, 0, LBNCA_CopyText, TRUE, LBNCA_Text, projects[i]->name, 
+            LBNA_Column, 1, LBNCA_CopyText, TRUE, LBNCA_Text, projects[i]->customer, 
+            LBNA_Column, 2, LBNCA_CopyText, TRUE, LBNCA_Text, hours_str, 
+            LBNA_Column, 3, LBNCA_CopyText, TRUE, LBNCA_Text, projects[i]->status, 
+            TAG_DONE);
+        if(node){
+            IExec->AddTail(project_list, node);
+        }   
+    }
+    
+    //attach list again
+    IIntuition->RefreshSetGadgetAttrs((struct Gadget *)listbrowser, main_window, NULL, LISTBROWSER_Labels, project_list, TAG_DONE);
+
+    project_free_all(projects, count);
+    printf("Projectlist refreshed with %d projects\n", count);
+    
+    
 }
