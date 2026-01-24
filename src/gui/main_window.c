@@ -27,10 +27,10 @@ struct Window *create_main_window(void)
     Object *main_layout, *button_layout, *space_obj;
     
     struct ColumnInfo column_info[] = {
-        { 40, "Name",     0 },
-        { 30, "Customer", 0 },
-        { 15, "Hours",    0 },
-        { 15, "Status",   0 },
+        { 200, "Name",     CIF_DRAGGABLE },
+        { 150, "Customer", CIF_DRAGGABLE },
+        { 80, "Hours",    CIF_DRAGGABLE },
+        { 80, "Status",   CIF_DRAGGABLE },
         { -1, NULL,       0 }
     };
     
@@ -47,8 +47,11 @@ struct Window *create_main_window(void)
         LISTBROWSER_ColumnInfo, column_info,
         LISTBROWSER_ColumnTitles, TRUE,
         LISTBROWSER_Labels, project_list,
-        LISTBROWSER_AutoFit, TRUE,
         LISTBROWSER_Striping, LBS_ROWS,
+        LISTBROWSER_Editable, FALSE,
+        LISTBROWSER_ShowSelected, TRUE,
+        LISTBROWSER_Separators, TRUE,
+        LISTBROWSER_TitleClickable, TRUE,
         TAG_DONE);
     
     // Skapa knappar
